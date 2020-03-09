@@ -25,6 +25,7 @@ class Scanner {
         return (double)$this->next();
     }
 }
+// From https://qiita.com/yoshikyoto/items/6924478283dbdd549e4b
 
 $sc = new Scanner();
 //$n = $sc->nextInt();
