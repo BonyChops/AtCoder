@@ -3,4 +3,4 @@ Practice for AtCoder with PHP.
 # Caution
 ※クソコード
 # class.php
-PHPで標準入力をスペースで小分けするのに参考にしました
+標準入力が任意の数あったときに使う
