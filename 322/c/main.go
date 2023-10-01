@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 )
 
@@ -12,11 +13,13 @@ func main() {
 		fmt.Scan(&a[i])
 	}
 	c := 1
+	var buffer bytes.Buffer
 	for _, a := range a {
 		tmp := a - c
 		for i := tmp; i >= 0; i-- {
-			fmt.Println(i)
+			buffer.WriteString(fmt.Sprintln(i))
 			c += 1
 		}
 	}
+	fmt.Print(buffer.String())
 }
