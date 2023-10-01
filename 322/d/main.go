@@ -149,6 +149,10 @@ func main() {
 														// 設置を試み
 														pttx := px - l + x
 														ptty := py - t + y
+														if bg[ptty][pttx] {
+															failed = true
+															break
+														}
 
 														bg[ptty][pttx] = true
 													}
