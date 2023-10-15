@@ -5,6 +5,7 @@ import (
 	"math"
 	"sort"
 	"strconv"
+	"strings"
 )
 
 func nextPermutation(x sort.Interface) bool {
@@ -31,6 +32,27 @@ func nextPermutation(x sort.Interface) bool {
 	return true
 }
 
+func toP(s string) []int {
+	l := len(s)
+	p := make([]int, l)
+	for i := 0; i < l; i++ {
+		var err error
+		p[i], err = strconv.Atoi(string(s[i]))
+		if err != nil {
+			panic("err")
+		}
+	}
+	return p
+}
+
+func toS(p []int) string {
+	var s string
+	for _, n := range p {
+		s += strconv.Itoa(n)
+	}
+	return s
+}
+
 func main() {
 	var n int
 	var s string
@@ -44,31 +66,20 @@ func main() {
 			panic("err")
 		}
 	}
-	sort.Ints(ns)
 
-	tens := make([]int, n+1)
-	for i := range tens {
-		if i == 0 {
-			tens[i] = 1
-			continue
-		}
-		tens[i] = tens[i-1] * 10
-	}
-	// fmt.Println(tens)
+	sort.Ints(ns)
+	target := strings.TrimLeft(toS(ns), "0")
 
 	var c int
-	for {
-		var t int
-		for i, n := range ns {
-			t += n * tens[i]
-		}
-		r := math.Sqrt(float64(t))
-		if math.Floor(r) == math.Ceil(r) {
+	maxV := int(math.Pow10(n))
+	for i := 0; i*i < maxV; i++ {
+		ip := (strconv.Itoa(i * i))
+		isp := strings.Split(ip, "")
+		sort.Strings(isp)
+		if strings.TrimLeft(strings.Join(isp, ""), "0") == target {
 			c += 1
 		}
-		if !nextPermutation(sort.IntSlice(ns)) {
-			break
-		}
 	}
+
 	fmt.Println(c)
 }
