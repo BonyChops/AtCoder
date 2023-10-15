@@ -73,10 +73,16 @@ func main() {
 	var c int
 	maxV := int(math.Pow10(n))
 	for i := 0; i*i < maxV; i++ {
-		ip := (strconv.Itoa(i * i))
-		isp := strings.Split(ip, "")
-		sort.Strings(isp)
-		if strings.TrimLeft(strings.Join(isp, ""), "0") == target {
+		square := i * i
+		digits := make([]int, 0, n)
+
+		for square > 0 {
+			digits = append(digits, square%10)
+			square /= 10
+		}
+
+		sort.Ints(digits)
+		if strings.TrimLeft(toS(digits), "0") == target {
 			c += 1
 		}
 	}
