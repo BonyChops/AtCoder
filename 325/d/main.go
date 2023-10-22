@@ -83,7 +83,7 @@ func main() {
 		}
 
 		if didAppend {
-			index := sort.Search(len(key), func(i int) bool { return key[i] >= t })
+			index := i + 1
 			if len(key) <= 0 || index >= len(key) {
 				key = append(key, t)
 				continue
