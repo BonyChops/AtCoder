@@ -6,19 +6,18 @@ import (
 )
 
 type It struct {
-	t, d   int
-	used   bool
-	failed bool
+	d    int64
+	used bool
 }
 
 func dumpits(it []It) {
 	for _, iit := range it {
-		fmt.Printf("%d %d %t %t\n", iit.t, iit.d, iit.used, iit.failed)
+		fmt.Printf("%d %t\n", iit.d, iit.used)
 	}
 }
 
 func dumpit(it It) {
-	fmt.Printf("%d %d %t %t\n", it.t, it.d, it.used, it.failed)
+	fmt.Printf("%d %t\n", it.d, it.used)
 }
 
 var debug = false
@@ -27,60 +26,77 @@ func main() {
 	var n int
 	fmt.Scan(&n)
 	it := make([]It, n)
-	for i := range it {
-		fmt.Scan(&it[i].t, &it[i].d)
-		it[i].d += it[i].t
-	}
-
-	sort.Slice(it, func(i, j int) bool { return it[i].t < it[j].t })
-
-	var cnt int
-	for i := range it {
-		if it[i].failed {
+	tm := map[int64][]It{}
+	key := make([]int64, 0)
+	for range it {
+		var t, d int64
+		fmt.Scan(&t, &d)
+		tm[t] = append(tm[t], It{d: d + t})
+		index := sort.Search(len(key), func(i int) bool { return key[i] >= t })
+		if len(key) <= 0 || index >= len(key) {
+			key = append(key, t)
 			continue
 		}
-		if debug && i >= 4 {
-			fmt.Println("-----")
-			dumpits(it)
+		if key[index] == t {
+			continue
+		}
+		key = append(key[:index], append([]int64{t}, key[index:]...)...)
+	}
+
+	var total int64
+	for i := 0; i < len(key); i++ {
+		t := key[i]
+		if debug {
+			fmt.Println(t)
+			fmt.Println(key)
+			fmt.Println(tm)
+		}
+		min := int64(9099999999999999999)
+		var target *It
+		for i, eit := range tm[t] {
+			dur := eit.d - t
+			if min > dur {
+				min = dur
+				target = &tm[t][i]
+			}
 		}
 
-		var tgt int
-		min := 999999999999999
-		for j, ei := range it[i:] {
-			if it[i].t != ei.t {
-				break
-			}
-			if ei.used || ei.failed {
-				continue
-			}
-			l := ei.d - ei.t
-			if min > l {
-				min = l
-				tgt = j + i
+		if target == nil {
+			continue
+		}
+
+		if debug {
+			fmt.Println(len(tm[t]), "must be grater then 0")
+		}
+		(*target).used = true
+
+		t += 1
+		total += 1
+
+		var didAppend bool
+		for _, eit := range tm[t-1] {
+			dur := eit.d - t
+			if !eit.used && dur >= 0 {
+				tm[t] = append(tm[t], eit)
+				didAppend = true
 			}
 		}
-		it[tgt].used = true
-		cnt += 1
-		it[i], it[tgt] = it[tgt], it[i]
 
-		for j := range it[i:] {
-			if it[i].t != it[i+j].t {
-				// if debug {
-				// 	fmt.Println("----")
-				// 	fmt.Println(j)
-				// 	dumpit(it[i+j])
-				// }
-
-				break
-			}
-			if it[i+j].used {
+		if didAppend {
+			index := sort.Search(len(key), func(i int) bool { return key[i] >= t })
+			if len(key) <= 0 || index >= len(key) {
+				key = append(key, t)
 				continue
 			}
-			it[i+j].t += 1
-			if it[i+j].t > it[i+j].d {
-				it[i+j].failed = true
+			if key[index] == t {
+				continue
 			}
+			key = append(key[:index], append([]int64{t}, key[index:]...)...)
+		}
+		if debug {
+			fmt.Println(total)
 		}
 	}
-	fmt.Println(cnt)
+	fmt.Println(total)
+
 }
