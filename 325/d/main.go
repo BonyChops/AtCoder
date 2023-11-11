@@ -27,7 +27,7 @@ func main() {
 	fmt.Scan(&n)
 	it := make([]It, n)
 	tm := map[int64][]It{}
-	key := make([]int64, 0)
+	key := make([]int64, 0, n)
 	for range it {
 		var t, d int64
 		fmt.Scan(&t, &d)

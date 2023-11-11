@@ -1,2 +1,2 @@
 const lines = require("fs").readFileSync("/dev/stdin", "utf8").split("\n");
-console.log(lines);
+const [A] = lines[0].split(" ");
