@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 )
 
@@ -10,24 +11,15 @@ func main() {
 	var s string
 	fmt.Scan(&s)
 
-	b := make([][]int, n)
-	for j := range b {
-		b[j] = make([]int, n)
-	}
-
-	for j := range b {
-		var res bool
-		if j != 0 {
-			res = s[j] == s[j-1]
+	b := make([]int, n)
+	for i := range b {
+		if i == 0 {
+			continue
 		}
 
-		for i := 0; i < j; i++ {
-			if j != 0 {
-				b[i][j] = b[i][j-1]
-			}
-			if res {
-				b[i][j] += 1
-			}
+		b[i] = b[i-1]
+		if s[i] == s[i-1] {
+			b[i] += 1
 		}
 	}
 
@@ -39,11 +31,13 @@ func main() {
 	l := make([]int, q)
 	r := make([]int, q)
 
+	var rb bytes.Buffer
 	for i := range l {
 		fmt.Scan(&l[i], &r[i])
 
-		t := b[l[i]-1][r[i]-1]
-		fmt.Println(t)
+		t := b[r[i]-1] - b[l[i]-1]
+		rb.WriteString(fmt.Sprintln(t))
 	}
 
+	fmt.Print(rb.String())
 }
