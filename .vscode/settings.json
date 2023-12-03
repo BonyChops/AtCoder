@@ -1,5 +1,6 @@
 {
   "github.copilot.enable": {
     "*": false
-  }
+  },
+  "discord.enabled": false
 }
